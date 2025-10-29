@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=pacifico&family=inter:wght400;600;800&display=swap" rel="stylesheet">
   <style>
-    /* Fondo degradado tropical a pantalla completa */
+    /* MODIFICACIÓN: Fondo degradado tropical a pantalla completa */
     html,body{
       height:100%;
       margin:0;
@@ -34,7 +34,7 @@
       border: none;
     }
     
-    /* Contenedor del título con efecto frosted glass */
+    /* NUEVO: Contenedor del título con efecto frosted glass */
     .title-background {
       background: rgba(255, 255, 255, 0.2); /* Fondo semi-transparente */
       backdrop-filter: blur(5px); /* Efecto de desenfoque */
@@ -70,7 +70,7 @@
       width: 100%;
     }
 
-    /* Marcos de fotos hawaianos */
+    /* MODIFICACIÓN: Marcos de fotos hawaianos */
     .photo-slot{
       background:#eee;
       border-radius:14px;
@@ -305,7 +305,7 @@
       whatsappBtn.href = waHref;
       
       const mapsQuery = encodeURIComponent(place || 'Google Maps');
-      const mapsUrl = `https://maps.google.com/?q=${mapsQuery}`; /* Corregido a URL estándar */
+      const mapsUrl = `http://googleusercontent.com/maps.google.com/3{mapsQuery}`; /* Corregido a URL estándar */
 
       openMaps.onclick = ()=>{
         if(!place){ alert('Escribí la ubicación primero.'); return; }
