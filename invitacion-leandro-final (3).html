@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fiesta Hawaiana – Mis 18 años – Leandro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--glass-bg:rgba(255,255,255,0.95)}
+    html,body{height:100%;margin:0;font-family:'Inter',sans-serif;background:linear-gradient(135deg,#ff9a9e,#fecfef,#f6d365);}
+    body::before{
+      content:'';position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961321?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80') center/cover no-repeat;filter:brightness(0.6) saturate(0.95);z-index:-2;
+    }
+    body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.12));z-index:-1;}
+    .full-height{min-height:100vh}
+    .center-screen{display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;color:white}
+    .welcome-title{font-family:'Pacifico',cursive;font-size:clamp(28px,6vw,56px);text-shadow:0 6px 20px rgba(0,0,0,0.4)}
+    .welcome-sub{font-size:clamp(16px,2.5vw,22px);margin-top:12px;font-weight:600}
+    .enter-btn{margin-top:22px;background:#ffcb6b;color:#1f2937;padding:12px 20px;border-radius:12px;font-weight:800;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+    .invitation{display:none;padding:20px;box-sizing:border-box}
+    .card{width:100%;max-width:980px;margin:24px auto;background:var(--glass-bg);border-radius:20px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.45)}
+    .title{font-family:'Pacifico',cursive;font-size:clamp(22px,4vw,40px);color:#ff6b35;text-shadow:0 0 18px rgba(255,107,53,0.25)}
+    .photo-slot{background:#eee;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:4px solid rgba(255,255,255,0.6)}
+    .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:1/1}
+    .photo-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.95);background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.25));opacity:0;transition:opacity .18s}
+    .photo-slot:hover .photo-overlay{opacity:1}
+    .input{width:100%;padding:.6rem .8rem;border-radius:10px;border:1px solid rgba(0,0,0,0.08);background:white;font-weight:600}
+    .btn{background:#2563eb;color:white;padding:.6rem 1rem;border-radius:10px;font-weight:700;display:inline-flex;gap:.6rem;align-items:center;cursor:pointer;text-decoration:none}
+    .btn.secondary{background:#f59e0b;color:#07203a}
+    .small-note{font-size:13px;color:#374151}
+    @media (max-width:640px){.grid-2{grid-template-columns:1fr 1fr}.card{padding:16px}}
+  </style>
+</head>
+<body class="full-height">
+
+  <!-- AUDIO (intento de autoplay con fallback) -->
+  <audio id="musicPlayer" loop>
+    <source src="https://archive.org/download/danza-kuduro/Danza%20Kuduro.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcomeScreen" class="center-screen full-height">
+    <h1 class="welcome-title">🌺 ¡Aloha! 🌴</h1>
+    <p class="welcome-sub">Bienvenido a mi Fiesta Hawaiana – Mis 18 años – Leandro 🎉</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
+      <button id="enterBtn" class="enter-btn">Entrar a la invitación 🌺</button>
+      <button id="skipBtn" class="enter-btn" style="background:#7bd389;color:#09261a">Entrar ahora</button>
+    </div>
+    <p style="margin-top:18px;font-size:13px;opacity:0.95">La invitación se abrirá automáticamente en 3 segundos...</p>
+  </div>
+
+  <!-- INVITATION (hidden until welcome ends) -->
+  <div id="invitation" class="invitation">
+    <div class="card" role="main">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="title">🎉 Fiesta Hawaiana – Mis 18 años – Leandro</div>
+          <div class="small-note" style="margin-top:6px">Editá título, fotos, día, fecha, hora y ubicación directamente.</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="downloadBtn" class="btn" title="Descargar la invitación actual como archivo HTML">💾 Descargar</button>
+          <button id="playPauseBtn" class="btn secondary" title="Pausar / Reanudar música">⏯️ Música</button>
+        </div>
+      </div>
+
+      <!-- Fotos 4 -->
+      <div class="photo-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px">
+        <label class="photo-slot" tabindex="0">
+          <input type="file" accept="image/*" class="image-input" style="display:none" />
+          <img id="photo1" src="https://placehold.co/800x800/fbbf24/000000?text=Foto+1" alt="Foto 1"/>
+          <div class="photo-overlay">Hacé click para reemplazar Foto 1</div>
+        </label>
+        <label class="photo-slot" tabindex="0">
+          <input type="file" accept="image/*" class="image-input" style="display:none" />
+          <img id="photo2" src="https://placehold.co/800x800/ec4899/ffffff?text=Foto+2" alt="Foto 2"/>
+          <div class="photo-overlay">Hacé click para reemplazar Foto 2</div>
+        </label>
+        <label class="photo-slot" tabindex="0">
+          <input type="file" accept="image/*" class="image-input" style="display:none" />
+          <img id="photo3" src="https://placehold.co/800x800/10b981/ffffff?text=Foto+3" alt="Foto 3"/>
+          <div class="photo-overlay">Hacé click para reemplazar Foto 3</div>
+        </label>
+        <label class="photo-slot" tabindex="0">
+          <input type="file" accept="image/*" class="image-input" style="display:none" />
+          <img id="photo4" src="https://placehold.co/800x800/3b82f6/ffffff?text=Foto+4" alt="Foto 4"/>
+          <div class="photo-overlay">Hacé click para reemplazar Foto 4</div>
+        </label>
+      </div>
+
+      <!-- Texto central y campos -->
+      <div style="text-align:center;margin-top:20px">
+        <div style="font-size:18px;font-weight:700;color:#374151">Estás invitado a celebrar</div>
+        <div id="eventTitle" contenteditable="true" style="font-family:'Pacifico',cursive;font-size:32px;color:#ff6b35;margin-top:8px;outline:none">Fiesta Hawaiana – Mis 18 años – Leandro</div>
+
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:14px">
+          <input id="dayInput" class="input" placeholder="DIA (ej: Sábado)" value="Sábado" style="min-width:140px"/>
+          <input id="dateInput" class="input" placeholder="FECHA (ej: 14/02/2026)" value="14/02/2026" style="min-width:160px"/>
+          <input id="timeInput" class="input" placeholder="HORA (ej: 22:00)" value="22:00" style="min-width:120px"/>
+        </div>
+
+        <div style="margin-top:12px;max-width:720px;margin-left:auto;margin-right:auto">
+          <input id="placeInput" class="input" placeholder="UBICACIÓN (escribí algo y luego abrí en Google Maps)" value="Av. Ejemplo 123, Ciudad"/>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+            <button id="openMaps" class="btn">📍 Abrir en Google Maps</button>
+            <button id="copyMaps" class="btn secondary">🔗 Copiar enlace</button>
+          </div>
+        </div>
+
+        <div id="previewWhen" style="margin-top:12px;color:#374151;font-weight:700"></div>
+      </div>
+
+      <!-- WhatsApp / acciones -->
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:18px">
+        <a id="whatsappBtn" class="btn" target="_blank" rel="noopener noreferrer">📲 Confirmar por WhatsApp</a>
+        <button id="resetPhotos" class="btn secondary">♻️ Restaurar fotos</button>
+      </div>
+
+      <div style="margin-top:12px;text-align:center;color:#374151;font-size:13px">Código de vestimenta: Playero Tropical. Traé buena onda y ganas de bailar. 🌺</div>
+
+      <hr style="margin:18px 0"/>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div class="small-note">Tip: hacé click sobre cualquier foto para cambiarla. Luego podés descargar la invitación completa con las imágenes embebidas.</div>
+        <div style="display:flex;gap:8px">
+          <button id="editTitleBtn" class="btn">✏️ Editar título</button>
+          <button id="toggleFieldsBtn" class="btn secondary">🔧 Mostrar / Ocultar campos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // helpers
+    const music = document.getElementById('musicPlayer');
+    function tryPlayMusic(){ music.play().catch(()=>{}); }
+
+    // Auto-enter after 3 seconds unless user clicks Enter earlier
+    const welcome = document.getElementById('welcomeScreen');
+    const invitation = document.getElementById('invitation');
+    const enterBtn = document.getElementById('enterBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    let autoTimer = setTimeout(openInvitation, 3000);
+
+    function openInvitation(){
+      clearTimeout(autoTimer);
+      welcome.style.display = 'none';
+      invitation.style.display = 'block';
+      document.body.style.overflow = 'auto';
+      tryPlayMusic();
+    }
+
+    enterBtn.addEventListener('click', openInvitation);
+    skipBtn.addEventListener('click', openInvitation);
+
+    // Image replacement
+    document.querySelectorAll('.photo-slot').forEach((slot, idx)=>{
+      const input = slot.querySelector('input[type=file]');
+      const img = slot.querySelector('img');
+      slot.addEventListener('click', ()=> input.click());
+      slot.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' ') input.click(); });
+      input.addEventListener('change', (ev)=>{
+        const file = ev.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt)=> img.src = evt.target.result;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Inputs and links
+    const dayInput = document.getElementById('dayInput');
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
+    const placeInput = document.getElementById('placeInput');
+    const previewWhen = document.getElementById('previewWhen');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const openMaps = document.getElementById('openMaps');
+    const copyMaps = document.getElementById('copyMaps');
+
+    function updatePreviewAndLinks(){
+      const d = dayInput.value.trim();
+      const date = dateInput.value.trim();
+      const t = timeInput.value.trim();
+      const place = placeInput.value.trim();
+      previewWhen.textContent = `${d ? d + ' • ' : ''}${date ? date + ' • ' : ''}${t ? t : ''}${place ? ' • ' + place : ''}`;
+      const title = (document.getElementById('eventTitle').innerText || 'Invitación');
+      let msg = `¡Hola! Confirmo mi asistencia a ${title}. Día: ${d || '-'}, Fecha: ${date || '-'}, Hora: ${t || '-'}, Lugar: ${place || '-'}. Mi nombre es: `;
+      const waHref = 'https://wa.me/?text=' + encodeURIComponent(msg);
+      whatsappBtn.href = waHref;
+      const mapsQuery = encodeURIComponent(place || '');
+      openMaps.onclick = ()=>{
+        if(!place){ alert('Escribí la ubicación primero.'); return; }
+        const url = 'https://www.google.com/maps/search/?api=1&query=' + mapsQuery;
+        window.open(url, '_blank');
+      };
+      copyMaps.onclick = async ()=>{
+        if(!place){ alert('Escribí la ubicación primero.'); return; }
+        const url = 'https://www.google.com/maps/search/?api=1&query=' + mapsQuery;
+        try{ await navigator.clipboard.writeText(url); copyMaps.textContent = '✅ Copiado'; setTimeout(()=> copyMaps.textContent = '🔗 Copiar enlace',1500); }
+        catch(e){ prompt('Copiá este enlace:', url); }
+      };
+    }
+
+    [dayInput,dateInput,timeInput,placeInput].forEach(i=>i.addEventListener('input', updatePreviewAndLinks));
+    document.getElementById('eventTitle').addEventListener('input', updatePreviewAndLinks);
+    updatePreviewAndLinks();
+
+    // play/pause music
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    playPauseBtn.addEventListener('click', ()=>{
+      if(music.paused){ music.play().catch(()=>{}); playPauseBtn.textContent='⏯️ Música'; }
+      else{ music.pause(); playPauseBtn.textContent='▶️ Reproducir'; }
+    });
+
+    // reset photos
+    document.getElementById('resetPhotos').addEventListener('click', ()=>{
+      if(!confirm('Restaurar las 4 fotos a los placeholders originales?')) return;
+      document.getElementById('photo1').src='https://placehold.co/800x800/fbbf24/000000?text=Foto+1';
+      document.getElementById('photo2').src='https://placehold.co/800x800/ec4899/ffffff?text=Foto+2';
+      document.getElementById('photo3').src='https://placehold.co/800x800/10b981/ffffff?text=Foto+3';
+      document.getElementById('photo4').src='https://placehold.co/800x800/3b82f6/ffffff?text=Foto+4';
+    });
+
+    // download current HTML (images will be data URLs if replaced)
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const doctype = "<!doctype html>\n";
+      const html = document.documentElement.cloneNode(true);
+      const htmlStr = doctype + html.outerHTML;
+      const blob = new Blob([htmlStr], {type:'text/html;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'invitacion-leandro-final.html'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url),1000);
+    });
+
+    // edit title
+    document.getElementById('editTitleBtn').addEventListener('click', ()=>{
+      const t = document.getElementById('eventTitle'); t.focus();
+      const range = document.createRange(); range.selectNodeContents(t); range.collapse(false);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    });
+
+    // toggle fields
+    document.getElementById('toggleFieldsBtn').addEventListener('click', ()=>{
+      alert('Los campos son editables directamente: hacé click y escribí día, fecha, hora y ubicación.');
+    });
+
+    // prevent page from jumping when opening invitation
+    document.addEventListener('DOMContentLoaded', ()=>{ document.body.style.overflow='hidden'; });
+
+    // ensure music starts on click anywhere as fallback
+    document.addEventListener('click', ()=>{ music.play().catch(()=>{}); }, {once:true});
+  </script>
+</body>
+</html>
